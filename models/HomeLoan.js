@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const HomeLoanSchema = new mongoose.Schema({
     // Basic Applicant Details
+    applicationId: { type: String, unique: true },
     fullName: { type: String, required: true },
     pan: { type: String, required: true },
     mobile: { type: String, required: true },
@@ -16,7 +17,7 @@ const HomeLoanSchema = new mongoose.Schema({
     isPropertyIdentified: { type: Boolean, default: false },
 
     // Employment
-    employmentType: { type: String, enum: ['Salaried', 'Self-Employed'] },
+    employmentType: { type: String, enum: ['Salaried'] },
     monthlyIncome: { type: Number },
 
     // Loan Details

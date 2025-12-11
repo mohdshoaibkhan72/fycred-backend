@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const PersonalLoanSchema = new mongoose.Schema({
     // Basic Details
+    applicationId: { type: String, unique: true },
     fullName: { type: String, required: true },
     pan: { type: String, required: true },
     mobile: { type: String, required: true },

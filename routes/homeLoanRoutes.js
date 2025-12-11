@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const HomeLoan = require('../models/HomeLoan');
 
+const { generateApplicationId } = require('../utils/generateId');
+
 // @route   POST /api/home-loan
 // @desc    Submit a Home Loan application
 router.post('/', async (req, res) => {
     try {
-        const application = new HomeLoan(req.body);
+        const applicationId = generateApplicationId('HL');
+        const application = new HomeLoan({ ...req.body, applicationId });
         const savedApplication = await application.save();
         res.status(201).json({
             success: true,

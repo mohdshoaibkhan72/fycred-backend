@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const BalanceTransfer = require('../models/BalanceTransfer');
 
+const { generateApplicationId } = require('../utils/generateId');
+
 // @route   POST /api/balance-transfer
 // @desc    Submit a Balance Transfer application
 router.post('/', async (req, res) => {
     try {
-        const application = new BalanceTransfer(req.body);
+        const applicationId = generateApplicationId('BT');
+        const application = new BalanceTransfer({ ...req.body, applicationId });
         const savedApplication = await application.save();
         res.status(201).json({
             success: true,

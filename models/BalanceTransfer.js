@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const BalanceTransferSchema = new mongoose.Schema({
     // Basic Details
+    applicationId: { type: String, unique: true },
     fullName: { type: String, required: true },
     mobile: { type: String, required: true },
     email: { type: String },
+    dob: { type: Date, required: true },
 
     // Existing Loan Details
     existingBankName: { type: String, required: true },

@@ -9,6 +9,9 @@ const homeLoanRoutes = require('./routes/homeLoanRoutes');
 const balanceTransferRoutes = require('./routes/balanceTransferRoutes');
 const offerRoutes = require('./routes/offerRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const statusRoutes = require('./routes/statusRoutes');
+const eligibilityRoutes = require('./routes/eligibilityRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config();
 
@@ -20,17 +23,14 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-// Database Connection
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI, {
-            // Options are largely default in Mongoose 6+, but sometimes help
             serverSelectionTimeoutMS: 5000,
         });
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        // process.exit(1); // Keep running to allow retry or show error
     }
 };
 
@@ -50,6 +50,9 @@ app.use('/api/home-loan', homeLoanRoutes);
 app.use('/api/balance-transfer', balanceTransferRoutes);
 app.use('/api/offers', offerRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/status', statusRoutes);
+app.use('/api/eligibility', eligibilityRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
