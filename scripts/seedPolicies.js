@@ -101,6 +101,8 @@ const policies = [
     }
 ];
 
+const fs = require('fs');
+
 const seedDB = async () => {
     try {
         console.log('Connecting to DB...', process.env.MONGO_URI);
@@ -108,12 +110,29 @@ const seedDB = async () => {
         console.log('Connected.');
 
         console.log('Clearing existing policies...');
+        // await BankPolicy.deleteMany({}); // Optional: Clear all or just upsert. Clearing for clean state.
+        // Actually, let's clear to avoid stale data during dev
         await BankPolicy.deleteMany({});
 
-        console.log('Seeding policies...');
-        await BankPolicy.insertMany(policies);
+        const policiesDir = path.join(__dirname, '..', 'policies');
+        if (fs.existsSync(policiesDir)) {
+            const files = fs.readdirSync(policiesDir).filter(f => f.endsWith('.js') || f.endsWith('.json'));
 
-        console.log('Success! Policies seeded with HDFC (Expanded Multipliers).');
+            for (const file of files) {
+                const policyData = require(path.join(policiesDir, file));
+                console.log(`Seeding policy: ${policyData.name} (${policyData.bankId})`);
+                await BankPolicy.create(policyData);
+            }
+        }
+
+        // Also seed hardcoded HDFC if not present in files (or just move HDFC to a file later)
+        // For now, I'll keep HDFC here for backward compat effectively or if user wants it
+        // But better to verify if HDFC file exists. 
+        // Since I haven't created HDFC file, I will insert the hardcoded one too.
+        console.log('Seeding hardcoded HDFC policy...');
+        await BankPolicy.create(policies); // policies array from above
+
+        console.log('Success! Policies seeded.');
         process.exit(0);
     } catch (err) {
         console.error(err);

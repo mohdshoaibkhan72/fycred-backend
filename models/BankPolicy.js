@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const BankPolicySchema = new mongoose.Schema({
     bankId: { type: String, required: true, unique: true }, // e.g., 'HDFC', 'ICICI'
     name: { type: String, required: true },
+    logoUrl: { type: String }, // Optional logo URL
     productType: { type: String, default: 'PL' },
     customerTypes: [{ type: String, enum: ['salaried', 'self-employed'] }],
 
