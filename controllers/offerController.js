@@ -1,16 +1,16 @@
 const { calculateOffers } = require('../services/eligibilityService');
 
 // @desc    Calculate eligible offers based on user input
-const getCalculatedOffers = (req, res) => {
+const getCalculatedOffers = async (req, res) => {
     try {
-        const { salary, age, employmentType, existingEmi } = req.body;
+        const { salary, age, employmentType, existingEmi, companyName } = req.body;
 
         // Validate inputs
         if (!salary || !age) {
             return res.status(400).json({ success: false, message: 'Salary and Age are required' });
         }
 
-        const offers = calculateOffers({ salary, age, employmentType, existingEmi });
+        const offers = await calculateOffers({ salary, age, employmentType, existingEmi, companyName });
 
         res.status(200).json({
             success: true,

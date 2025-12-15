@@ -1,0 +1,68 @@
+const LENDER_LIST = [
+    { id: 'HDFC', name: 'HDFC Bank' },
+    { id: 'ICICI', name: 'ICICI Bank' },
+    { id: 'AXIS', name: 'Axis Bank' },
+    { id: 'YES', name: 'YES Bank' },
+    { id: 'IDFC', name: 'IDFC FIRST Bank' },
+    { id: 'KOTAK', name: 'Kotak Mahindra Bank' },
+    { id: 'BANDHAN', name: 'Bandhan Bank' },
+    { id: 'CSB', name: 'CSB Bank' },
+    { id: 'DBS', name: 'DBS Bank' },
+    { id: 'SBM', name: 'SBM Bank' },
+    { id: 'SCB', name: 'Standard Chartered' },
+    { id: 'INDUSIND', name: 'IndusInd Bank' },
+
+    { id: 'ADITYA_BIRLA', name: 'Aditya Birla Capital' },
+    { id: 'AXIS_FINANCE', name: 'Axis Finance' },
+    { id: 'TATA_CAPITAL', name: 'Tata Capital' },
+    { id: 'HERO_FINCORP', name: 'Hero Fincorp' },
+    { id: 'INCRED', name: 'InCred' },
+    { id: 'FINNABLE', name: 'Finnable' },
+    { id: 'PIRAMAL', name: 'Piramal Finance' },
+    { id: 'FULLERTON', name: 'Fullerton' },
+    { id: 'PAYSENSE', name: 'PaySense' },
+    { id: 'BAJAJ', name: 'Bajaj Finserv' },
+    { id: 'CHOLA', name: 'Cholamandalam' },
+    { id: 'MUTHOOT', name: 'Muthoot Finance' },
+    { id: 'POONAWALLA', name: 'Poonawalla Fincorp' },
+    { id: 'PREFR', name: 'CreditVidya / Prefr' },
+    { id: 'CREDIT_SAISON', name: 'Credit Saison India' },
+    { id: 'FINZY', name: 'Finzy' },
+    { id: 'LNT', name: 'L&T Finance' }
+];
+
+// Category labels as used in your PDF text
+const CATEGORY_OPTIONS_BY_LENDER = {
+    HDFC: ['Super A', 'Cat A', 'Cat B', 'Cat C', 'Cat D', 'Cat E', 'Govt', 'Listed', 'Non Listed'],
+    AXIS: ['Super A', 'Cat A', 'Cat B', 'Cat C', 'Cat D'],
+    ICICI: ['Elite', 'Govt', 'Super Prime', 'Open Market', 'Pvt listed'],
+    YES: ['Diamond', 'Diamond Plus', 'Gold', 'Gold Plus', 'Silver', 'Silver Plus', 'Yes Sarkar', 'Yes Guru'],
+    IDFC: ['CAT SA', 'CAT AB', 'CAT CD'],
+    KOTAK: ['Super A', 'Cat A', 'Cat B', 'Cat C', 'Cat D', 'Govt'],
+    CSB: ['Super A', 'Cat A', 'Cat B', 'Cat C', 'Cat D', 'CAT SAAB'],
+    INDUSIND: ['Listed', 'Open Market'],
+    BANDHAN: ['Govt', 'Cat A', 'Cat B', 'Cat C', 'Cat D'],
+    DBS: ['Salaried', 'Self Employed'],
+    SBM: ['Listed', 'Non Listed'],
+    SCB: ['Salaried', 'Self employed'],
+
+    ADITYA_BIRLA: ['Cat A', 'Cat B', 'Cat C'],
+    AXIS_FINANCE: ['Cat A', 'Cat B', 'Cat C'],
+    TATA_CAPITAL: ['Super A', 'Cat A', 'Cat B', 'Govt', 'Listed'],
+    HERO_FINCORP: ['Salaried', 'Self Employed'],
+    INCRED: ['Salaried'],
+    FINNABLE: ['Prime', 'Emerging'],
+    PIRAMAL: ['Salaried', 'Govt', 'Grade 4'],
+    FULLERTON: ['Salaried', 'Grade 4'],
+    PAYSENSE: ['Salaried', 'Self employed'],
+    BAJAJ: ['Prime Listed', 'Prime Open Market', 'Growth Listed', 'Growth Open Market'],
+    CHOLA: ['Salaried', 'Self employed'],
+    MUTHOOT: ['Govt', 'Cat A', 'Cat B', 'Cat C', 'Cat D', 'Unlisted'],
+    POONAWALLA: ['Only Listed'],
+    PREFR: ['Salaried Tier 1', 'Salaried Tier 2', 'Self Employed'],
+    CREDIT_SAISON: ['Govt', 'Super A', 'Cat A', 'Cat B', 'Cat C', 'Cat D', 'Cat E'],
+    FINZY: ['Salaried'],
+    LNT: ['CIBIL based']
+};
+
+module.exports = { LENDER_LIST, CATEGORY_OPTIONS_BY_LENDER };
