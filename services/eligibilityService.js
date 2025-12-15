@@ -40,13 +40,27 @@ const calculateOffers = async (data) => {
             let companyCategory = 'Unlisted';
             if (companyData) {
                 // Check if specific mapping exists for this bank (e.g., 'HDFC')
-                if (companyData.categories && companyData.categories.has(policy.bankId)) {
-                    companyCategory = companyData.categories.get(policy.bankId);
+                // Handle both Mongoose Map (if standard doc) and Object (if .lean())
+                let mappedCategory = null;
+                if (companyData.categories) {
+                    if (typeof companyData.categories.get === 'function') {
+                        mappedCategory = companyData.categories.get(policy.bankId);
+                    } else if (typeof companyData.categories === 'object') {
+                        // Fallback for plain object (lean queries / debugging)
+                        mappedCategory = companyData.categories[policy.bankId];
+                    }
+                }
+
+                if (mappedCategory) {
+                    companyCategory = mappedCategory;
                 } else {
                     // Fallback to global default
                     companyCategory = companyData.defaultCategory || 'Unlisted';
                 }
             }
+
+            // Debug Mismatch
+            // console.log(`[Engine] Bank: ${policy.bankId} | Company Cat: ${companyCategory}`);
 
             // Determine Multiplier
             // Default 0 implies not eligible unless rule matches
@@ -54,37 +68,36 @@ const calculateOffers = async (data) => {
             let ruleSource = 'Default';
 
             // Check Multiplier Rules (from most specific to least)
-            // Rules are array objects in DB. We filter for matching salary range & category
             if (policy.credit.multiplierRules && policy.credit.multiplierRules.length > 0) {
-                // Find rule for this Category + Salary
-                const specificRule = policy.credit.multiplierRules.find(r =>
-                    r.category === companyCategory &&
+                // 1. Filter all rules that match the Category and Salary Logic
+                const matchingRules = policy.credit.multiplierRules.filter(r =>
+                    (r.category === companyCategory || r.category === 'Any' || (!r.category)) &&
                     salary >= r.incomeMin &&
                     salary <= r.incomeMax
                 );
 
-                if (specificRule) {
-                    multiplier = specificRule.multiplier;
-                    ruleSource = `Category ${companyCategory}`;
-                } else {
-                    // Fallback: Rule without category (General Salaried)
-                    const generalRule = policy.credit.multiplierRules.find(r =>
-                        (!r.category || r.category === 'Any' || r.category === 'Unlisted') &&
-                        salary >= r.incomeMin &&
-                        salary <= r.incomeMax
+                if (matchingRules.length > 0) {
+                    // 2. Prioritize Exact Category Matches (e.g., 'Super A' > 'Any')
+                    const exactMatches = matchingRules.filter(r => r.category === companyCategory);
+                    const candidates = exactMatches.length > 0 ? exactMatches : matchingRules;
+
+                    // 3. Select the Rule with the HIGHEST Multiplier
+                    // This creates the "Max Eligible Amount" by picking the best tenure option automatically
+                    const bestRule = candidates.reduce((prev, current) =>
+                        (current.multiplier > prev.multiplier) ? current : prev
                     );
-                    if (generalRule) {
-                        multiplier = generalRule.multiplier;
-                        ruleSource = 'General Income';
-                    }
+
+                    multiplier = bestRule.multiplier;
+                    ruleSource = `Match: ${bestRule.category || 'Any'} (x${multiplier})`;
+
+                    // console.log(`[Engine] Found Best Rule for ${policy.name}: x${multiplier} (Tenure: ${bestRule.tenure || 'N/A'})`);
                 }
             }
 
-            // Hard fallback if DB has no rules but policy exists (Manual Overrides for demo)
+            // Fallback: If no DB rules matched or Bank has no rules
             if (multiplier === 0) {
-                if (policy.bankId === 'HDFC') multiplier = companyCategory === 'Super A' ? 24 : 18;
-                else if (policy.bankId === 'ICICI') multiplier = companyCategory === 'Super A' ? 22 : 15;
-                else multiplier = 10;
+                // Default safety fallback for banks without specific rules (e.g., Axis, Indusind initially)
+                multiplier = 10;
             }
 
             if (multiplier > 0) {
