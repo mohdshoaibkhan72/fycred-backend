@@ -1,29 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { calculateOffers } = require('../services/eligibilityService');
+const { getCalculatedOffers } = require('../controllers/offerController');
 
-// @route   POST /api/offers/calculate
-// @desc    Calculate eligible offers based on user input
-router.post('/calculate', (req, res) => {
-    try {
-        const { salary, age, employmentType, existingEmi } = req.body;
-
-        // Validate inputs
-        if (!salary || !age) {
-            return res.status(400).json({ success: false, message: 'Salary and Age are required' });
-        }
-
-        const offers = calculateOffers({ salary, age, employmentType, existingEmi });
-
-        res.status(200).json({
-            success: true,
-            count: offers.length,
-            data: offers
-        });
-    } catch (error) {
-        console.error('Error calculating offers:', error);
-        res.status(500).json({ success: false, message: 'Server Error' });
-    }
-});
+router.post('/calculate', getCalculatedOffers);
 
 module.exports = router;
