@@ -13,6 +13,7 @@ const statusRoutes = require('./routes/statusRoutes');
 const eligibilityRoutes = require('./routes/eligibilityRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const adminAuthRoutes = require('./routes/adminAuth');
+const loanPartnerRoutes = require('./routes/loanPartnerRoutes');
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use('/api/status', statusRoutes);
 app.use('/api/eligibility', eligibilityRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
+app.use('/api/partners', loanPartnerRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
